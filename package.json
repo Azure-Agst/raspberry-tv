@@ -14,7 +14,7 @@
     "test": "node start.js"
   },
   "author": "Andrew Augustine",
-  "license": "ISC",
+  "license": "GNU",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Azure-Agst/raspberry-tv.git"
