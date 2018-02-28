@@ -7,10 +7,10 @@
 // - No actual html! That's a first.
 
 // let's explain each of these..
-var express = require('express'); //Server Engine. Use this for templating engine, heet 
-var exphbs  = require('express-handlebars');
-var formidable = require('formidable');
-var fs = require('fs');
+var express = require('express'); //Server Engine. Use this for templating engine
+var exphbs  = require('express-handlebars'); //Templating. Similar to jekyll.
+var formidable = require('formidable'); //for form handling
+var fs = require('fs'); //to mess with filesystem
 
 var app = express();
 
