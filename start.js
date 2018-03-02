@@ -22,14 +22,27 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 // Consider using a switch statement here
 
 app.all('/', function (req, res) {
-	fs.readdir('./images/', function(err, files){
-		var images = files.filter(word => word.endsWith(".jpeg")||word.endsWith(".jpg")||word.endsWith(".png"))
-		var imagelist = "";
-		for (i=0; i<images.length; i++) {
-			imagelist += "<div class='row'><div class='column1'><p>"+images[i]+"</p></div><div class='column2'><img src ='./images/"+images[i]+"' style='float: right;' height='100px'></div><div class='column3'><button class='btn btn-danger' style='float: right;'>X</button></div></div>";
-		}
-		return res.render('home', {images: imagelist});
-	})
+	var form = new formidable.IncomingForm();
+	form.parse(req, function (err, fields, files) {
+		if (files.filetoupload == undefined) {postprocessing(); return;};
+		var oldpath = files.filetoupload.path;
+		var newpath = __dirname + "/images/" + files.filetoupload.name;
+		fs.rename(oldpath, newpath, function (err) {
+			if (err) throw err;
+			postprocessing();
+		});
+	});
+
+	function postprocessing(){
+		fs.readdir('./images/', function(err, files){
+			var images = files.filter(word => word.endsWith(".jpeg")||word.endsWith(".jpg")||word.endsWith(".png"))
+			var imagelist = "";
+			for (i=0; i<images.length; i++) {
+				imagelist += "<div class='row'><div class='column1'><p>"+images[i]+"</p></div><div class='column2'><img src ='./images/"+images[i]+"' style='float: right;' height='100px'></div><div class='column3'><button class='btn btn-danger' style='float: right;'>X</button></div></div>";
+			}
+			return res.render('home', {images: imagelist});
+		})
+	};
 });
 
 app.get('/index', function (req, res) {
