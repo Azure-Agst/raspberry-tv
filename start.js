@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // (c) 2018 Andrew Augustine
 // this'll be the final index file.
 
