@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // (c) 2018 Andrew Augustine
 // this'll be the final index file.
 
@@ -58,3 +59,4 @@ app.use(function (req, res, next) {
 })
 
 app.listen(8080, () => console.log("yo here we at"));
+>>>>>>> 8528feaa2d5951232a16d91fcf278454005b4340
