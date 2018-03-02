@@ -28,18 +28,25 @@ app.all('/', function (req, res) {
 			//console.log(fields);console.log(files);
 			
 			//determine what form
-			if (files.filetoupload !== undefined) { // it's an upload
+			if (fields.upload == 'true') { // it's an upload
+				if (files.filetoupload.name == '') {
+					res.locals.alert = "<div class='alert alert-warning' role='alert'>You can't upload nothing!</div>"
+					postprocessing();
+					return;
+				}
 				var oldpath = files.filetoupload.path; var filename;
 				if (fields.rename == undefined) {filename == files.filetoupload.name;} else {filename = fields.rename};
 				if (filename.endsWith(".jpg") == false || filename.endsWith(".jpeg") == false || filename.endsWith(".png") == false) filename += "."+files.filetoupload.name.split('.').pop();
 				var newpath = __dirname + "/images/" + filename;
 				fs.rename(oldpath, newpath, function (err) {
 					if (err) throw err;
+					res.locals.alert = "<div class='alert alert-success' role='alert'>File "+filename+" was uploaded!</div>"
 					postprocessing();
 					return;
 				});
 			} else if (fields.filedelete !== null) {
 				fs.unlink('./images/'+fields.filedelete, function(err){
+					res.locals.alert = "<div class='alert alert-danger' role='alert'>File "+fields.filedelete+" was deleted!</div>"
 					if (err) throw err;
 					postprocessing();
 					return;
@@ -60,7 +67,7 @@ app.all('/', function (req, res) {
 			for (i=0; i<images.length; i++) {
 				imagelist += "<div class='row'><div class='column1'><p>"+images[i]+"</p></div><div class='column2'><img src ='./images/"+images[i]+"' style='float: right;' height='100px'></div><div class='column3'><form method='post' enctype='multipart/form-data'><button class='btn btn-danger' name='filedelete' value='"+images[i]+"' style='float: right;'>X</button></form></div></div>";
 			}
-			return res.render('home', {images: imagelist});
+			return res.render('home', {images: imagelist, alert: res.locals.alert});
 		})
 	};
 });
