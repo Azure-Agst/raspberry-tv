@@ -1,10 +1,18 @@
-<style>body {padding-top: 70px;}</style>
+<style>
+body{padding-top: 70px;}
+.column1{float: left;width: 50%;}
+.column2{float: left;width: 40%;}
+.column3{float: left;width: 10%;}
+/* Clear floats after the columns */
+.row{overflow: auto;padding: 0px 5% 10px 5%;}
+.row:after{content: "";display: table;clear: both;}
+.delright{float: right;}
+</style>
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Raspi-TV</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
@@ -18,8 +26,65 @@
 </nav>
 
 <div class="container">
+
+	{{{ alert }}}
+
 	<div class="jumbotron">
-	  <h2>Raspi-TV</h2>
+	  <h3>Upload</h3>
+	  <hr>
+	  <form action="fileupload" method="post" enctype="multipart/form-data">
+   	    <div class="input-group mb-3">
+         <div class="custom-file">
+           <input type="file" class="custom-file-input" id="inputGroupFile01" name="filetoupload">
+           <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+         </div>
+        </div>
+       	<div class="input-group mb-3">
+         <input type="text" class="form-control" placeholder="(Optional)" aria-label="(optional)" aria-describedby="basic-addon2" name="rename">
+  		   <div class="input-group-append">
+    		  <span class="input-group-text" id="basic-addon2">Rename?</span>
+  		   </div>
+        </div>
+        <div class="btn-group" role="group" aria-label="uh">
+	  	  <button type="submit" class="btn btn-success">Upload</button>
+          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">Help</button>
+        </div>
+	  </form>
+	</div>
+	<div class="jumbotron">
+	  <h3 id="current">Current Images</h3>
+	  <hr>
 	  {{{ images }}}
 	</div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Test!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$('#inputGroupFile01').on('change',function(){
+  //get the file name
+  var filepath = $(this).val();
+  var filename = filepath.replace(/^.*\\/, "");
+  //replace the "Choose a file" label
+  $(this).next('.custom-file-label').html(filename);
+})
+</script>
