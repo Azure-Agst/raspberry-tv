@@ -13,13 +13,13 @@ var express = require('express'); //Server Engine. Use this for templating engin
 var exphbs  = require('express-handlebars'); //Templating. Similar to jekyll.
 var formidable = require('formidable'); //for form handling
 var fs = require('fs'); //to mess with filesystem
-var path = require('path');
+var path = require('path'); //to find where we're located
 
-var app = express();
+var app = express(); // init express
 
-app.set('view engine', 'handlebars');
-app.use('/images', express.static(path.join(__dirname, 'images')));
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars'); //set handlebars as render engine
+app.use('/images', express.static(path.join(__dirname, 'images'))); // set ./images as static folder
+app.engine('handlebars', exphbs({defaultLayout: 'main'})); //set main.handlebars as our master layout
 
 
 // ========[Webserver]========
@@ -28,6 +28,7 @@ app.all('/', function (req, res) {
 	if (req.method == 'POST') {
 		var form = new formidable.IncomingForm();
 		form.parse(req, function (err, fields, files) {
+			// vvvvv [Debug, debug, debug!] vvvvv
 			//console.log(fields);console.log(files);
 			
 			//determine what form
@@ -47,14 +48,14 @@ app.all('/', function (req, res) {
 					postprocessing();
 					return;
 				});
-			} else if (fields.filedelete !== null) {
+			} else if (fields.filedelete !== null) { //is delete form
 				fs.unlink('./images/'+fields.filedelete, function(err){
-					res.locals.alert = "<div class='alert alert-danger' role='alert'>File "+fields.filedelete+" was deleted!</div>"
 					if (err) throw err;
+					res.locals.alert = "<div class='alert alert-danger' role='alert'>File "+fields.filedelete+" was deleted!</div>"
 					postprocessing();
 					return;
 				});
-			} else {
+			} else { //what.
 				res.write("what.");
 				return res.end();
 			}
