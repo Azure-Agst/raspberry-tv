@@ -1,3 +1,4 @@
 {
-	"_message": "Honestly the only reason this is here is so ./images/ can exist in git and I'm too lazy to make the folder in script."
+	"_message": "Ayyyyyy finally some use now.",
+	"images":["heck.jpg", "wow.jpg"]
 }

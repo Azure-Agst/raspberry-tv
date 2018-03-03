@@ -19,6 +19,7 @@ var app = express(); // init express
 
 app.set('view engine', 'handlebars'); //set handlebars as render engine
 app.use('/images', express.static(path.join(__dirname, 'images'))); // set ./images as static folder
+app.use('/assets', express.static(path.join(__dirname, 'assets'))); // set ./assets as static folder
 app.engine('handlebars', exphbs({defaultLayout: 'main'})); //set main.handlebars as our master layout
 
 // ========[Functions]========
