@@ -21,10 +21,25 @@ app.set('view engine', 'handlebars'); //set handlebars as render engine
 app.use('/images', express.static(path.join(__dirname, 'images'))); // set ./images as static folder
 app.engine('handlebars', exphbs({defaultLayout: 'main'})); //set main.handlebars as our master layout
 
+// ========[Functions]========
+
+//NOTE: ayyyyyy it's callback now!
+function getImages(callback) {
+  var images;
+  fs.readdir('./images/', function(err, files){
+    images = files.filter(word => word.endsWith(".jpeg")||word.endsWith(".jpg")||word.endsWith(".png"));
+    //console.log(im)
+    if(typeof callback == "function") callback(images);
+  });
+};
+
 
 // ========[Webserver]========
 
 app.all('/', function (req, res) {
+	
+	var images = getImages();
+	
 	if (req.method == 'POST') {
 		var form = new formidable.IncomingForm();
 		form.parse(req, function (err, fields, files) {
@@ -61,18 +76,22 @@ app.all('/', function (req, res) {
 			}
 		});
 	} else {
-		postprocessing();
+		setTimeout(function(){
+			postprocessing();
+		}, 500);
 	}
 
 	function postprocessing(){
-		fs.readdir('./images/', function(err, files){
-			var images = files.filter(word => word.endsWith(".jpeg")||word.endsWith(".jpg")||word.endsWith(".png"))
+		/* fs.readdir('./images/', function(err, files){
+			var images = files.filter(word => word.endsWith(".jpeg")||word.endsWith(".jpg")||word.endsWith(".png")) */
+		getImages(function(images){
 			var imagelist = "";
 			for (i=0; i<images.length; i++) {
 				imagelist += "<div class='row'><div class='column1'><p>"+images[i]+"</p></div><div class='column2'><img src ='./images/"+images[i]+"' style='float: right;' height='100px'></div><div class='column3'><form method='post' enctype='multipart/form-data'><button class='btn btn-danger' name='filedelete' value='"+images[i]+"' style='float: right;'>X</button></form></div></div>";
 			}
 			return res.render('home', {images: imagelist, alert: res.locals.alert});
-		})
+		});
+		/* }) */
 	};
 });
 
@@ -80,19 +99,6 @@ app.get('/present', function (req, res) {
 	// Page 2 should be entirely local, therefore no preprocessing needed. Just render and go!
     return res.render('page2');
 });
-
-
-// ========[Functions]========
-
-//NOTE: This function's async w/ no callback cuz i'm lazy. Dont use.
-function getImages() {
-  var im;
-  fs.readdir('./images/', function(err, files){
-    im = files.filter(word => word.endsWith(".jpeg")||word.endsWith(".jpg")||word.endsWith(".png"));
-    console.log(im)
-    return im;
-  });
-};
 
 
 // ========[E R R O R B O Y Z]========
