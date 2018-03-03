@@ -3,8 +3,10 @@
 
 // ========[Notes]========
 // - Use Express/Handlebars to render dynamic upload page
-// - Use a switch statement to handle the selection of pages
-// - No actual html! That's a first.
+// - Use json and a background js function to dynamically update div
+
+
+// ========[Meta and shit]========
 
 // let's explain each of these..
 var express = require('express'); //Server Engine. Use this for templating engine
@@ -19,7 +21,8 @@ app.set('view engine', 'handlebars');
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 
-// Consider using a switch statement here
+
+// ========[Webserver]========
 
 app.all('/', function (req, res) {
 	if (req.method == 'POST') {
@@ -72,15 +75,27 @@ app.all('/', function (req, res) {
 	};
 });
 
-app.get('/index', function (req, res) {
-    return res.render('home');
-});
-
 app.get('/present', function (req, res) {
+	// Page 2 should be entirely local, therefore no preprocessing needed. Just render and go!
     return res.render('page2');
 });
 
-// E R R O R B O Y Z
+
+// ========[Functions]========
+
+//NOTE: This function's async w/ no callback cuz i'm lazy. Dont use.
+function getImages() {
+  var im;
+  fs.readdir('./images/', function(err, files){
+    im = files.filter(word => word.endsWith(".jpeg")||word.endsWith(".jpg")||word.endsWith(".png"));
+    console.log(im)
+    return im;
+  });
+};
+
+
+// ========[E R R O R B O Y Z]========
+
 // (500 errors may be wonky, but at least 404 works.)
 app.use(function (req, res, next) {
   res.status(404).send("<h2><u>Error: 404 (File not found)</u></h2>"
@@ -96,4 +111,6 @@ app.use(function (req, res, next) {
                       +"<pre>Raspi-TV/1.0.0</pre>")
 })
 
+
+// ========[Start!]========
 app.listen(8080, () => console.log("yo here we at"));
