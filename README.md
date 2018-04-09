@@ -1,5 +1,6 @@
-# raspberry-tv
-for the media center
+# [DEPRECIATED] raspberry-tv
+
+project was cancelled, due to someone else commandeering the job
 
 basically programming a node.js app to host a webserver.
 
